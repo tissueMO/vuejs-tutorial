@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue.js チュートリアル</title>
+</head>
+<body>
+
+  <h3>宣言的レンダリング</h3>
+  <div id="app1">
+    <!-- JS上では app.message の値を変更するだけでここの中身がりアクティブに書き換わる -->
+    {{ message }}
+  </div>
+  <button onclick="app1.message='HTMLのDOMに一切触らずにメッセージが変更されたよ';">リアクティブに文言変更してみるボタン</button>
+
+  <hr>
+
+  <div id="app2">
+    <!-- message の中身を title 属性にバインドする -->
+    <!-- Vue.js の属性は v- で始まる規則になっている -->
+    <span v-bind:title="message">
+      マウスホバーするとロードした時刻が出てくるよ
+    </span>
+  </div>
+
+  <hr>
+
+  <h3>条件分岐</h3>
+  <div id="app3">
+    <!-- DOMの構造にデータをバインドする例.1 -->
+    <!-- 表示・非表示の切り替えは論理値の切り替え一つで実現できちゃう -->
+    <span v-if="visible">見えてますかー？</span>
+  </div>
+  <button onclick="app3.visible=false;">見えなくする</button>
+  <button onclick="app3.visible=true;">見えるようにする</button>
+
+  <hr>
+
+  <h3>ループ</h3>
+  <div id="app4">
+    <!-- DOMの構造にデータをバインドする例.2 -->
+    <!-- JS配列の要素分だけHTML要素を生成してみる -->
+    <ol>
+      <!-- Dictionary -->
+      <li v-for="todo in todoTexts">
+        {{ todo.text }}
+      </li>
+    </ol>
+    <!-- 要素が後から追加されてもHTML要素にもそれが反映される -->
+    <button onclick="app4.todoTexts.push({ text: '寝る' });">JS辞書に一つ追加してみる</button>
+
+    <ol>
+      <!-- Array -->
+      <li v-for="todo in todos">
+        {{ todo }}
+      </li>
+    </ol>
+    <!-- 要素が後から削除されてもHTML要素にもそれが反映される -->
+    <button onclick="app4.todos.pop();">JS配列から一つ削除してみる</button>
+  </div>
+
+  <hr>
+
+  <h3>ユーザー入力の制御</h3>
+  <div id="app5">
+    <!-- イベントリスナー関数のバインドも v-on 属性で簡単にできちゃう -->
+    <p>{{ message }}</p>
+    <button v-on:click="reverseMessage">メッセージをひっくり返す</button>
+  </div>
+
+  <hr>
+
+  <div id="app6">
+    <!-- 双方向バインディングの例 -->
+    <!-- テキストボックスの値が変更されたらJS上の値も変更される -->
+    <!-- JS上の値が変更されたらテキストボックスの値も変更される -->
+    <p>{{ message }}</p>
+    <input v-model="message">
+  </div>
+  <button onclick="app6.message='Hello Vue!';">HTMLの文言をリセット</button>
+
+  <hr>
+
+  <h3>カスタムコンポーネント</h3>
+  <div id="app7">
+    <ol>
+      <!-- 配列ベースで動的に要素が増減するカスタムコンポーネントを作ってみる -->
+      <todo-item v-for="item in todos" v-bind:todo="item" v-bind:key="item.id" />
+    </ol>
+  </div>
+  <button onclick="app7.todos.pop();">JS辞書から一つ削除してみる</button>
+  <button onclick="app7.todos.push({ id: -1, text: '働く' });">JS辞書に一つ追加してみる</button>
+
+  <hr>
+
+  <!-- HTML構造をすべてロードした後に Vue.js とそれを使ったコードをロードする -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
