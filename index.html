@@ -9,8 +9,11 @@
 
   <h3>宣言的レンダリング</h3>
   <div id="app1">
-    <!-- JS上では app.message の値を変更するだけでここの中身がりアクティブに書き換わる -->
-    {{ message }}
+    <!-- 初回のみ変数の値をレンダリングして以後の変更を再描画しないようにできる -->
+    <span v-once>元の文言: {{ message }}</span><br>
+
+    <!-- JS上では app.message の値を変更するだけでここの中身がリアクティブに書き換わる -->
+    <span>変更可能な文言: {{ message }}</span>
   </div>
   <button onclick="app1.message='HTMLのDOMに一切触らずにメッセージが変更されたよ';">リアクティブに文言変更してみるボタン</button>
 
@@ -64,8 +67,10 @@
 
   <h3>ユーザー入力の制御</h3>
   <div id="app5">
-    <!-- イベントリスナー関数のバインドも v-on 属性で簡単にできちゃう -->
     <p>{{ message }}</p>
+
+    <!-- イベントリスナー関数のバインドも v-on 属性で簡単にできちゃう -->
+    <!-- :click の部分は v-on ディレクティブの引数で、何のイベントを捕捉するのかを指定できるようになっている -->
     <button v-on:click="reverseMessage">メッセージをひっくり返す</button>
   </div>
 
@@ -94,9 +99,48 @@
 
   <hr>
 
+  <h3>生のHTML</h3>
+  <div id="syntax1">
+    <!-- {{...}} の中身はHTMLエスケープされた形で出力される -->
+    <p>二重中括弧で書くと ... {{ redHtml }}</p>
+
+    <!-- v-html 属性に埋め込む形で生のHTMLを吐き出せる -->
+    <!-- XSSを防ぐため、ユーザーによってもたらされた任意の文字列を使ってHTML展開することは推奨されない -->
+    <p>v-html ディレクティブで書くと ... <span v-html="redHtml"></span></p>
+  </div>
+
+  <hr>
+
+  <h3>二重中括弧の中で JavaScript式 を書いてみる</h3>
+  <div id="syntax2">
+    <p>{{ number + 1 }}</p>
+    <p>{{ ok ? 'YES' : 'NO' }}</p>
+    <p>{{ message.split('').reverse().join('') }}</p>
+
+    <!-- 文はNG -->
+    <!-- {{ var a = 1 }} -->
+
+    <!-- 制御構文もNG -->
+    <!-- {{ if (ok) { return message } }} -->
+  </div>
+
+  <hr>
+
+  <h3>ディレクティブ省略記法</h3>
+  <div id="syntax3">
+    <!-- 以下2つの書き方は同じ意味を成すし、HTML上正しい構文でありパースも問題なく行われる -->
+    <a v-bind:href="url">リンク先</a><br>
+    <a :href="url">リンク先 (省略記法)</a><br>
+
+    <!-- 以下2つの書き方は同じ意味を成すし、HTML上正しい構文でありパースも問題なく行われる -->
+    <button v-on:click="doSomething">ボタン</button><br>
+    <button @click="doSomething">ボタン (省略記法)</button><br>
+  </div>
+
   <!-- HTML構造をすべてロードした後に Vue.js とそれを使ったコードをロードする -->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="introduction.js"></script>
   <script src="vue-instance.js"></script>
+  <script src="template-syntax.js"></script>
 </body>
 </html>
