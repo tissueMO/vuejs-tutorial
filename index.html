@@ -196,6 +196,84 @@
 
   <hr>
 
+  <h3>インラインメソッドハンドラー</h3>
+  <div id="eventHandling1">
+    <!-- イベントハンドラーの関数指定のついでにインラインで引数を指定できちゃう -->
+    <button v-on:click="say('YES')">YES</button>
+    <button v-on:click="say('NO')">NO</button>
+
+    <!-- $event を指定することでネイティブなDOMイベント (よくある e 引数) を渡せる -->
+    <button v-on:click="say('Native', $event)">ネイティブなDOMイベントを渡してみる</button>
+  </div>
+
+  <hr>
+
+  <h3>イベント修飾子</h3>
+  <div id="eventHandling2">
+    <form action="/undefined-form">
+      <a href="/undefined-link">
+        <button type="submit" v-on:click.stop.prevent>押してもページ遷移しないSubmitボタン</button>
+      </a>
+    </form>
+  </div>
+
+  <h3>キーとマウスの修飾子</h3>
+  <div id="eventHandling3">
+    <p>Enterキーでフォームが送信されるイメージ</p>
+    <input type="text" v-on:keyup.enter="submit">
+
+    <p>Shift+Alt+Ctrlキー押下状態でEnterキーを押してフォームが送信されるイメージ</p>
+    <input type="text" v-on:keyup.enter.shift.alt.ctrl.exact="submit">
+
+    <a href="#" v-on:click.right="submit">右クリックでフォームが送信されるイメージ</a>
+  </div>
+
+  <hr>
+
+  <h3>フォーム入力をバインドしてみる</h3>
+  <div id="formbind1">
+    <!-- .trim を付けることで自動的に両端の余計なスペースをカットしてくれる -->
+    <input type="text" v-model.trim="message">
+    <p>Message is: {{ message }}</p>
+  </div>
+  <div id="formbind2">
+    <textarea v-model="message"></textarea>
+    <p>Message is: {{ message }}</p>
+  </div>
+  <div id="formbind3">
+    <!-- チェックボックスは bool 値となる -->
+    <input type="checkbox" id="checkbox" v-model="checked">
+    <label for="checkbox">{{ checked }}</label>
+  </div>
+  <div id="formbind4">
+    <!-- 複数のチェックボックスに対して同じ名前でバインドした場合は順不同な配列になる -->
+    <input type="checkbox" id="taro" v-model="checks" value="太郎">
+    <label for="taro">太郎</label>
+    <input type="checkbox" id="jiro" v-model="checks" value="次郎">
+    <label for="jiro">次郎</label>
+    <input type="checkbox" id="saburo" v-model="checks" value="三郎">
+    <label for="saburo">三郎</label>
+    <br>
+    <span>Checked: {{ checks }}</span>
+  </div>
+  <div id="formbind5">
+    <!-- チェックボックスでも true/false の値を直接指定することでどちらかの値を取るようになる -->
+    <input type="checkbox" id="checkbox-with-value" v-model="checkedValue" true-value="yes" false-value="no">
+    <label for="checkbox-with-value">{{ checkedValue }}</label>
+  </div>
+  <div id="formbind6">
+    <!-- ここでセレクトボックスを複数選択可能した場合、バインドした変数が配列になる -->
+    <select v-model="selected">
+      <option disabled value="">選択して下さい...</option>
+      <option>A</option>
+      <option>B</option>
+      <option>C</option>
+    </select>
+    <span>Selected: {{ selected }}</span>
+  </div>
+
+
+
   <!-- HTML構造をすべてロードした後に Vue.js とそれを使ったコードをロードする -->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="01_introduction.js"></script>
@@ -203,5 +281,7 @@
   <script src="03_template-syntax.js"></script>
   <script src="04_computed-property.js"></script>
   <script src="05_class-and-style-binding.js"></script>
+  <script src="06_event-handling.js"></script>
+  <script src="07_form.js"></script>
 </body>
 </html>
