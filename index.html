@@ -32,8 +32,18 @@
   <h3>条件分岐</h3>
   <div id="app3">
     <!-- DOMの構造にデータをバインドする例.1 -->
-    <!-- 表示・非表示の切り替えは論理値の切り替え一つで実現できちゃう -->
-    <span v-if="visible">見えてますかー？</span>
+    <p>
+      <!-- 条件を満たした要素だけが実際のDOMに含められる -->
+      <!-- 表示・非表示の切り替えは論理値の切り替え一つで実現できちゃう -->
+      <span id="app3-visible" v-if="visible">見えてますかー？</span>
+      <!-- v-else-if もある -->
+      <span id="app3-hidden" v-else>見えてませーん</span>
+    </p>
+
+    <!-- 条件を満たしていなくても実際のDOMに含めた上で、満たしたときだけ表示されるようにするには v-show を使う -->
+    <p>
+      <span id="app3-show" v-show="visible">ずっとここにいるよ</span>
+    </p>
   </div>
   <button onclick="app3.visible=false;">見えなくする</button>
   <button onclick="app3.visible=true;">見えるようにする</button>
@@ -137,10 +147,58 @@
     <button @click="doSomething">ボタン (省略記法)</button><br>
   </div>
 
+  <hr>
+
+  <h3>算出プロパティ - getter</h3>
+  <div id="computedprop1">
+    <h4>バインドしたデータ</h4>
+    <p>{{ message }}</p>
+    <h4>関数を通して値を取得する算出プロパティ</h4>
+    <p>{{ reversedMessage }}</p>
+  </div>
+
+  <h4>算出プロパティ - setter</h4>
+  <div id="computedprop2">
+    <p>
+      姓={{ lastName }}<br>
+      名={{ firstName }}<br>
+    </p>
+    <p>フルネーム: {{ fullName }}</p>
+  </div>
+
+  <hr>
+
+  <h3>HTMLクラスバインド</h3>
+  <style>
+    .active {
+      font-weight: bold;
+    }
+    .text-danger {
+      color: red;
+    }
+  </style>
+  <div id="classbind1">
+    <p v-bind:class="{ active: isActive }">isActive == true の場合に限りクラス [active] が付与されます</p>
+  </div>
+  <div id="classbind2">
+    <p v-bind:class="classes">連想配列 classes のうち true になっているクラスがまとめて付与されます</p>
+  </div>
+
+  <hr>
+
+  <h3>HTMLインラインスタイルバインド</h3>
+  <div id="stylebind1">
+    <p v-bind:style="styles">連想配列 styles がそのままインラインスタイルを表します</p>
+  </div>
+
+  <hr>
+
   <!-- HTML構造をすべてロードした後に Vue.js とそれを使ったコードをロードする -->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="introduction.js"></script>
-  <script src="vue-instance.js"></script>
-  <script src="template-syntax.js"></script>
+  <script src="01_introduction.js"></script>
+  <script src="02_vue-instance.js"></script>
+  <script src="03_template-syntax.js"></script>
+  <script src="04_computed-property.js"></script>
+  <script src="05_class-and-style-binding.js"></script>
 </body>
 </html>
