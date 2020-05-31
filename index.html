@@ -272,7 +272,16 @@
     <span>Selected: {{ selected }}</span>
   </div>
 
+  <hr>
 
+  <h3>コンポーネントにプロパティを渡してみる</h3>
+  <div id="component1">
+    <blog-post title="タイトル1">テンプレートが適用されるとここの本文が削除されます</blog-post>
+    <blog-post title="タイトル2">テンプレートが適用されるとここの本文が削除されます</blog-post>
+    <blog-post title="タイトル3">テンプレートが適用されるとここの本文が削除されます</blog-post>
+  </div>
+
+  <hr>
 
   <!-- HTML構造をすべてロードした後に Vue.js とそれを使ったコードをロードする -->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -283,5 +292,6 @@
   <script src="05_class-and-style-binding.js"></script>
   <script src="06_event-handling.js"></script>
   <script src="07_form.js"></script>
+  <script src="08_component.js"></script>
 </body>
 </html>
