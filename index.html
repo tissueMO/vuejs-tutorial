@@ -287,7 +287,7 @@
   <div id="component2">
     <p>合計 {{ count }} いいね</p>
     <!-- $event で $emit の第2引数を取り出せる -->
-    <blog-item v-for="post in posts" v-bind:key="post.id" v-bind:title="post.title"
+    <blog-item v-for="post in posts" v-bind:id="post.id" v-bind:title="post.title"
       v-on:count="count += $event"></blog-item>
   </div>
 
@@ -297,6 +297,8 @@
   <div id="component3">
     <alert-item>ごめんなさい、処理に失敗しました</alert-item>
   </div>
+
+  <hr>
 
   <!-- HTML構造をすべてロードした後に Vue.js とそれを使ったコードをロードする -->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>

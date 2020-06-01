@@ -7,10 +7,21 @@ const component1 = new Vue({
 });
 
 Vue.component('blog-item', {
-  props: ['title'],
+  // シンプルに配列で渡してもOK
+  // props: [ 'title' ],
+  props: {
+    // 辞書で渡すと型チェックできるようになる
+    id: {
+      // 複数の型を許容することもできる
+      type: [Number, Number],
+      // この項目を必須とすることもできる
+      required: true,
+    },
+    title: String,
+  },
   template: `
     <div>
-      <h3>{{ title }}</h3>
+      <h3>{{ id }}: {{ title }}</h3>
       <button v-on:click="$emit('count', 1)">いいね！</button>
     </div>
   `,
