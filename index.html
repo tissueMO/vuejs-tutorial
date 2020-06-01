@@ -283,6 +283,21 @@
 
   <hr>
 
+  <h3>子コンポーネントが捕捉したイベントをそのまま親コンポーネント側に伝播させてみる</h3>
+  <div id="component2">
+    <p>合計 {{ count }} いいね</p>
+    <!-- $event で $emit の第2引数を取り出せる -->
+    <blog-item v-for="post in posts" v-bind:key="post.id" v-bind:title="post.title"
+      v-on:count="count += $event"></blog-item>
+  </div>
+
+  <hr>
+
+  <h3>コンポーネントに任意のコンテンツを渡す</h3>
+  <div id="component3">
+    <alert-item>ごめんなさい、処理に失敗しました</alert-item>
+  </div>
+
   <!-- HTML構造をすべてロードした後に Vue.js とそれを使ったコードをロードする -->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="01_introduction.js"></script>
