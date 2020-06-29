@@ -1,0 +1,7 @@
+{
+  "name": "vuejs-tutorial",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@vue/cli": "^4.4.6"
+  }
+}
