@@ -300,6 +300,42 @@
 
   <hr>
 
+  <h3>CSSトランジションと v-if を織り交ぜてみる (Enter/Leave)</h3>
+  <div id="transition1">
+    <button v-on:click="show = !show">表示切替</button>
+    <transition name="fade">
+      <p v-if="show">見えてる？</p>
+    </transition>
+  </div>
+  <style>
+    #transition1 .fade-enter-active, #transition1 .fade-leave-active {
+      transition: opacity .5s;
+    }
+    #transition1 .fade-enter, #transition1 .fade-leave-to {
+      opacity: 0;
+    }
+  </style>
+
+  <hr>
+
+  <h3>リストアイテムのトランジション</h3>
+  <div id="transition2">
+    <button v-on:click="reverse">ひっくり返す</button>
+    <button v-on:click="slide">一つずらす</button>
+    <transition-group name="flip-list" tag="ul">
+      <li v-for="item in items" v-bind:key="item">
+        {{ item }}
+      </li>
+    </transition-group>
+  </div>
+  <style>
+    #transition2 .flip-list-move {
+      transition: transform 1s;
+    }
+  </style>
+
+  <hr>
+
   <!-- HTML構造をすべてロードした後に Vue.js とそれを使ったコードをロードする -->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="01_introduction.js"></script>
@@ -310,5 +346,6 @@
   <script src="06_event-handling.js"></script>
   <script src="07_form.js"></script>
   <script src="08_component.js"></script>
+  <script src="09_transition.js"></script>
 </body>
 </html>
