@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import User from '../components/User.vue'
+import UserHome from '../components/UserHome.vue'
+import UserProfile from '../components/UserProfile.vue'
 
 Vue.use(VueRouter)
 
@@ -11,12 +14,27 @@ const routes = [
     component: Home
   },
   {
+    // コード分割を実現し、ルートを読み込んだ時点で遅延ロードされる
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    // :id の部分は任意の文字列を取り、コンポーネント側からは this.$route.params.id として取得できる
+    path: '/user/:id',
+    component: User,
+    children: [
+      {
+        // サブルートに該当しないときのビューをセットできる
+        path: '',
+        component: UserHome
+      },
+      {
+        // ルートはネストすることができる
+        path: 'profile',
+        component: UserProfile
+      }
+    ]
   }
 ]
 
