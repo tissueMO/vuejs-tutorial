@@ -1,7 +1,11 @@
 <template>
   <div>
     <p>User [{{ this.$route.params.id }}]</p>
-    <router-view/>
+
+    <router-view name="user-header" />
+    <router-view />
+    <router-view name="user-footer" />
+
     <button @click="previous">Previous</button>
     <button @click="top">Top</button>
     <button @click="next">Next</button>

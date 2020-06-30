@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 import User from '../components/User.vue'
 import UserHome from '../components/UserHome.vue'
 import UserProfile from '../components/UserProfile.vue'
+import UserHeader from '../components/UserHeader.vue'
+import UserFooter from '../components/UserFooter.vue'
 
 Vue.use(VueRouter)
 
@@ -28,12 +30,20 @@ const routes = [
         // サブルートに該当しないときのビューをセットできる
         path: '',
         name: 'User',
-        component: UserHome
+        components: {
+          default: UserHome,
+          'user-header': UserHeader,
+          'user-footer': UserFooter
+        }
       },
       {
         // ルートはネストすることができる
         path: 'profile',
-        component: UserProfile
+        components: {
+          default: UserProfile,
+          'user-header': UserHeader,
+          'user-footer': UserFooter
+        }
       }
     ]
   }
