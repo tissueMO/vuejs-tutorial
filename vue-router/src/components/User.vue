@@ -1,6 +1,7 @@
 <template>
   <div>
-    <p>User [{{ this.$route.params.id }}]</p>
+    <!-- <p>User [{{ this.$route.params.id }}]</p> -->
+    <p>User [{{ id }}]</p>
 
     <router-view name="user-header" />
     <router-view />
@@ -17,6 +18,10 @@ import router from '@/router/index.js'
 
 export default {
   name: 'User',
+
+  // ルーター側で props: true が指定されていると this.$route.params を props として取得できるようになる
+  props: ['id'],
+
   methods: {
     previous: function () {
       // ページ遷移のヒストリーを一つ戻す
