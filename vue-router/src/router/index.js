@@ -25,6 +25,11 @@ const routes = [
     // :id の部分は任意の文字列を取り、コンポーネント側からは this.$route.params.id として取得できる
     path: '/user/:id',
     component: User,
+
+    // エイリアス: このルートでも同じ結果を得られるようになる
+    alias: '/usr/:id',
+
+    // ルートはネストすることができる
     children: [
       {
         // サブルートに該当しないときのビューをセットできる
@@ -37,7 +42,6 @@ const routes = [
         }
       },
       {
-        // ルートはネストすることができる
         path: 'profile',
         components: {
           default: UserProfile,
@@ -46,11 +50,14 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    // リダイレクト: URLはリダイレクト先のものに置き換わる
+    path: '/u/:id',
+    redirect: { name: 'User' }
   }
 ]
 
-const router = new VueRouter({
-  routes
-})
+const router = new VueRouter({ routes })
 
 export default router

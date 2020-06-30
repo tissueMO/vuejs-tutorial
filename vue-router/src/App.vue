@@ -6,6 +6,10 @@
       <router-link to="/user/USER-TEST1">User1</router-link> |
       <!-- 名前が付けられたルートに対してはパスではなく名前でリンクを作れる -->
       <router-link :to="{ name: 'User', params: { id: 'USER-TEST2' }}">User2</router-link> |
+      <!-- ルートのリダイレクト -->
+      <router-link to="/u/USER-TEST3">User3</router-link> |
+      <!-- ルートのエイリアス -->
+      <router-link to="/usr/USER-TEST4">User4</router-link>
     </div>
     <router-view/>
   </div>
