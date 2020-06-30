@@ -27,6 +27,7 @@ const routes = [
       {
         // サブルートに該当しないときのビューをセットできる
         path: '',
+        name: 'User',
         component: UserHome
       },
       {

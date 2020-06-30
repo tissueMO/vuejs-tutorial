@@ -4,8 +4,8 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
       <router-link to="/user/USER-TEST1">User1</router-link> |
-      <router-link to="/user/USER-TEST2">User2</router-link> |
-      <router-link to="/user/USER-TEST2/profile">User2Profile</router-link>
+      <!-- 名前が付けられたルートに対してはパスではなく名前でリンクを作れる -->
+      <router-link :to="{ name: 'User', params: { id: 'USER-TEST2' }}">User2</router-link> |
     </div>
     <router-view/>
   </div>
