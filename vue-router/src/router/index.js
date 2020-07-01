@@ -22,9 +22,9 @@ const routes = [
   },
   {
     // コード分割を実現し、ルートを読み込んだ時点で遅延ロードされる
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/large-content',
+    name: 'LargeContent',
+    component: () => import('../views/LargeContent.vue')
   },
   {
     path: '/load-before-navigation',
@@ -84,7 +84,13 @@ const router = new VueRouter({
   // HTML5 History モード: ルートに # ハッシュを付けずに純粋なパスでURLを表現する
   // 内蔵サーバーは標準対応しているが、Apache等のWebサーバーに乗せる場合は別途リライト設定が必要
   mode: 'history',
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    }
+    return false
+  }
 })
 
 export default router
