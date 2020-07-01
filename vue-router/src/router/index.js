@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
 import NotFound from '../views/NotFound.vue'
 import Home from '../views/Home.vue'
+import LoadBeforeNavigation from '../views/LoadBeforeNavigation.vue'
+import LoadAfterNavigation from '../views/LoadAfterNavigation.vue'
+
 import User from '../components/User.vue'
 import UserHome from '../components/UserHome.vue'
 import UserProfile from '../components/UserProfile.vue'
@@ -21,6 +25,14 @@ const routes = [
     path: '/about',
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '/load-before-navigation',
+    component: LoadBeforeNavigation
+  },
+  {
+    path: '/load-after-navigation',
+    component: LoadAfterNavigation
   },
   {
     // :id の部分は任意の文字列を取り、コンポーネント側からは this.$route.params.id として取得できる

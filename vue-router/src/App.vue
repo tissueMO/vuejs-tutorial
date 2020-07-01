@@ -3,6 +3,8 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
+      <router-link to="/load-after-navigation">LoadAfter</router-link> |
+      <router-link to="/load-before-navigation">LoadBefore</router-link> |
       <router-link to="/user/USER-TEST1">User1</router-link> |
       <!-- 名前が付けられたルートに対してはパスではなく名前でリンクを作れる -->
       <router-link :to="{ name: 'User', params: { id: 'USER-TEST2' }}">User2</router-link> |
