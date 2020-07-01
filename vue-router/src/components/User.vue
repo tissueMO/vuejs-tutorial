@@ -3,15 +3,41 @@
     <!-- <p>User [{{ this.$route.params.id }}]</p> -->
     <p>User [{{ id }}]</p>
 
-    <router-view name="user-header" />
-    <router-view />
-    <router-view name="user-footer" />
+    <transition mode="out-in">
+      <router-view name="user-header" />
+    </transition>
+    <transition mode="out-in">
+      <router-view />
+    </transition>
+    <transition mode="out-in">
+      <router-view name="user-footer" />
+    </transition>
 
     <button @click="previous">Previous</button>
     <button @click="top">Top</button>
     <button @click="next">Next</button>
   </div>
 </template>
+
+<style lang="scss">
+.v {
+  &-enter {
+    opacity: 0;
+
+    &-active {
+      transition: opacity .5s;
+    }
+  }
+  &-leave {
+    &-to {
+      opacity: 0;
+    }
+    &-active {
+      transition: opacity .5s;
+    }
+  }
+}
+</style>
 
 <script>
 import router from '@/router/index.js'

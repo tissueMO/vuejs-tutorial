@@ -11,7 +11,9 @@
       <!-- ルートのエイリアス -->
       <router-link to="/usr/USER-TEST4">User4</router-link>
     </div>
-    <router-view/>
+    <transition mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -33,6 +35,24 @@
 
     &.router-link-exact-active {
       color: #42b983;
+    }
+  }
+}
+
+.v {
+  &-enter {
+    opacity: 0;
+
+    &-active {
+      transition: opacity .5s;
+    }
+  }
+  &-leave {
+    &-to {
+      opacity: 0;
+    }
+    &-active {
+      transition: opacity .5s;
     }
   }
 }
