@@ -9,17 +9,19 @@
       </select>
     </div>
     <div class="form-group">
-      <p>
-        地雷数:<br>{{ selectedLevel.mineCount }}
-      </p>
-      <font-awesome-icon
-        class="fa fa-face"
-        size="2x"
-        :icon="emotion"
-        @click="init" />
-      <p>
-        経過時間:<br>{{ timeSecondsCount }}
-      </p>
+      <!-- 地雷数 -->
+      <Digits :value="selectedLevel.mineCount" :digitSize="3" />
+
+      <div class="face">
+        <font-awesome-icon
+          class="fa fa-face"
+          size="2x"
+          :icon="emotion"
+          @click="init" />
+      </div>
+
+      <!-- 経過時間 -->
+      <Digits :value="timeSecondsCount" :digitSize="3" />
     </div>
 
     <Panel
@@ -35,10 +37,14 @@
 
 <style lang="scss">
 #game {
-  .form-group {
+  .flex {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .form-group {
+    @extend .flex;
     margin: 0.5rem 0;
 
     label {
@@ -50,8 +56,21 @@
       text-align: center;
     }
 
-    .fa-face {
-      margin: 0 0.5rem;
+    .face {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0.5rem 0.75rem;
+      background-color: #000;
+
+      .fa-face {
+        margin: 0 0.5rem;
+        color: yellow;
+      }
     }
   }
 }
@@ -59,11 +78,15 @@
 
 <script>
 import Panel from '../components/Panel'
+import Digits from '../components/Digits'
 import eventBus from '../eventbus'
 
 export default {
   name: 'Game',
-  components: { Panel },
+  components: {
+    Panel,
+    Digits,
+  },
   data: function () {
     return {
       levels: {
