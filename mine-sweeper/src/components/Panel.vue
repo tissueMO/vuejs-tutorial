@@ -28,31 +28,33 @@
 </template>
 
 <style lang="scss">
-.row {
-  display: flex;
-  justify-content: center;
-}
-
-.alert {
-  position: fixed;
-  width: 100vw;
-  height: 100px;
-  top: calc(50% - 100px);
-  text-align: center;
-  padding: 1rem 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &.alert-gameover {
-    background: yellow;
-  }
-  &.alert-cleared {
-    background: cyan;
+#panel {
+  .row {
+    display: flex;
+    justify-content: center;
   }
 
-  p {
-    font-size: 2rem;
+  .alert {
+    position: fixed;
+    width: 100vw;
+    height: 100px;
+    top: calc(50% - 100px);
+    text-align: center;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.alert-gameover {
+      background: yellow;
+    }
+    &.alert-cleared {
+      background: cyan;
+    }
+
+    p {
+      font-size: 2rem;
+    }
   }
 }
 </style>
@@ -60,6 +62,7 @@
 <script>
 import Tile from './Tile'
 import shuffle from 'shuffle-array'
+import eventBus from '../eventbus'
 
 const OFFSET_MATRIX = [
   [[-1, -1], [0, -1], [1, -1]],
@@ -102,6 +105,9 @@ export default {
   },
   created: function () {
     this.init()
+
+    const that = this
+    eventBus.$on('init', () => that.init())
   },
   watch: {
     sizeWidth () {
@@ -278,7 +284,7 @@ export default {
       if (this.tiles[row][col].hasMine) {
         // ゲームオーバー
         this.isGameOver = true
-        this.$emit('end')
+        this.$emit('end', false)
         this.openMinesAll()
       }
       if (this.tiles[row][col].number === 0) {
@@ -305,7 +311,7 @@ export default {
       if (this.safeCountOfRemaining === 0 && !this.isCleared) {
         // ゲームクリア
         this.isCleared = true
-        this.$emit('end')
+        this.$emit('end', true)
 
         // 残った地雷マスにすべてフラグを立てる
         const that = this

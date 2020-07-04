@@ -30,58 +30,58 @@
 .tile {
   position: relative;
   user-select: none;
-}
 
-.fa {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  .fa {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
-  &.fa-flag {
-    color: white;
+    &.fa-flag {
+      color: white;
+    }
+    &.fa-bomb {
+      color: black;
+    }
+    &.fa-times {
+      color: red;
+    }
   }
-  &.fa-bomb {
-    color: black;
-  }
-  &.fa-times {
-    color: red;
-  }
-}
 
-input[type="checkbox"] {
-  display: none;
+  input[type="checkbox"] {
+    display: none;
 
-  & + label {
-    user-select: none;
+    & + label {
+      user-select: none;
 
-    display: block;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    border: 1px solid #000;
-    margin: 2px;
+      display: block;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      border: 1px solid #000;
+      margin: 2px;
 
-    background-color: #000;
+      background-color: #000;
 
-    &.opened {
-      background-color: #fff;
+      &.opened {
+        background-color: #fff;
 
-      &.mine {
-        background-color: red;
+        &.mine {
+          background-color: red;
 
-        &.flagged {
-          background-color: yellow;
+          &.flagged {
+            background-color: yellow;
+          }
         }
-      }
 
-      @for $i from 1 through 8 {
-        &.number-#{$i}:not(.flagged-bad) {
-          &:after {
-            content: '#{$i}';
-            font-size: 1rem;
-            margin: 0 0.37rem;
-            line-height: 1.25rem;
+        @for $i from 1 through 8 {
+          &.number-#{$i}:not(.flagged-bad) {
+            &:after {
+              content: '#{$i}';
+              font-size: 1rem;
+              margin: 0 0.37rem;
+              line-height: 1.25rem;
+            }
           }
         }
       }
