@@ -1,32 +1,41 @@
 <template>
-  <div class="tile">
+  <div class="tile button" :class="[{'button-disabled': !canOpen}]">
     <input
       type="checkbox"
       :id="id"
       :checked="opened"
       :disabled="!canOpen"
       @click="$emit('open', [row, col])" />
+
     <label
       :for="id"
       :class="[numberClass, openedClass, mineClass, flaggedClass, badFlaggedClass]"
       @click.right.prevent="$emit('flag', [row, col])" />
+
+    <!-- 地雷 -->
     <font-awesome-icon
       class="fa fa-bomb"
-      icon="bomb"
+      icon="bomb" size="lg"
       v-if="opened && hasMine" />
+
+    <!-- フラグ -->
     <font-awesome-icon
       class="fa fa-flag"
-      icon="flag"
+      icon="flag" size="lg"
       v-if="!opened && flagged"
       @click.right.prevent="$emit('flag', [row, col])" />
+
+    <!-- 地雷ではないマスに立てたフラグのアイコン -->
     <font-awesome-icon
       class="fa fa-times"
-      icon="times"
+      icon="times" size="lg"
       v-if="opened && badFlagged" />
   </div>
 </template>
 
 <style lang="scss">
+@import "../assets/scss/_common";
+
 .tile {
   position: relative;
   user-select: none;
@@ -38,7 +47,7 @@
     transform: translate(-50%, -50%);
 
     &.fa-flag {
-      color: white;
+      color: red;
     }
     &.fa-bomb {
       color: black;
@@ -52,19 +61,18 @@
     display: none;
 
     & + label {
+      $size: 32px;
       user-select: none;
 
       display: block;
-      width: 20px;
-      height: 20px;
+      width: $size;
+      height: $size;
       text-align: center;
-      border: 1px solid #000;
-      margin: 2px;
-
-      background-color: #000;
 
       &.opened {
-        background-color: #fff;
+        background: lightgray;
+        border: dotted 1px #333;
+        box-sizing: border-box;
 
         &.mine {
           background-color: red;
@@ -77,10 +85,36 @@
         @for $i from 1 through 8 {
           &.number-#{$i}:not(.flagged-bad) {
             &:after {
+              @extend .font-notosans-bold;
+
               content: '#{$i}';
-              font-size: 1rem;
-              margin: 0 0.37rem;
-              line-height: 1.25rem;
+              font-size: $size - 8px;
+              line-height: $size;
+
+              @if $i == 1 {
+                color: blue;
+              }
+              @else if $i == 2 {
+                color: green;
+              }
+              @else if $i == 3 {
+                color: red;
+              }
+              @else if $i == 4 {
+                color: darkblue;
+              }
+              @else if $i == 5 {
+                color: darkred;
+              }
+              @else if $i == 6 {
+                color: darkturquoise;
+              }
+              @else if $i == 7 {
+                color: black;
+              }
+              @else if $i == 8 {
+                color: dimgray;
+              }
             }
           }
         }

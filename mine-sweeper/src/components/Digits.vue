@@ -8,10 +8,20 @@
 </template>
 
 <style lang="scss">
+@import "../assets/scss/_common";
+
 .digits {
   display: flex;
   justify-content: center;
   align-items: center;
+  align-self: flex-end;
+
+  $border-width: 2px;
+  border-top: $border-width solid #808080;
+  border-right: $border-width solid #dfdfdf;
+  border-bottom: $border-width solid #dfdfdf;
+  border-left: $border-width solid #808080;
+  box-sizing: border-box;
 }
 </style>
 

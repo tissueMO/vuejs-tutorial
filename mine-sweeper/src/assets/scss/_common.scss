@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;900&display=swap');
+
+.font-notosans {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 400;
+}
+
+.font-notosans-bold {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.d-inline-block {
+  display: inline-block;
+}
+
+.form-group {
+  @extend .flex;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mx-auto {
+  margin: 0 auto;
+}
+
+.button {
+  background: silver;
+  box-shadow: inset -1px -1px #0a0a0a,
+              inset 1px 1px #fff,
+              inset -2px -2px grey,
+              inset 2px 2px #dfdfdf;
+
+  &:active:not(.button-disabled) {
+    box-shadow: inset -1px -1px #ffffff,
+                inset 1px 1px #0a0a0a,
+                inset -2px -2px #dfdfdf,
+                inset 2px 2px #808080;
+
+    * {
+      left: 1px;
+      top: 1px;
+    }
+  }
+}

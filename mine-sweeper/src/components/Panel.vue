@@ -1,59 +1,68 @@
 <template>
-  <div id="panel">
-    <div class="row" v-for="(row, rowIndex) in tiles" :key="rowIndex">
-      <div class="col" v-for="(col, colIndex) in row" :key="colIndex">
-        <Tile
-          :row="rowIndex"
-          :col="colIndex"
-          :number="col.number"
-          :hasMine="col.hasMine"
-          :opened="col.opened"
-          :flagged="col.flagged"
-          :badFlagged="col.badFlagged"
-          :frozen="isGameOver || isCleared"
-          @open="open"
-          @flag="flag" />
+  <div id="panel-wrapper" class="form-group">
+    <div id="panel" class="d-inline-block">
+      <div class="row" v-for="(row, rowIndex) in tiles" :key="rowIndex">
+        <div class="col" v-for="(col, colIndex) in row" :key="colIndex">
+          <Tile
+            :row="rowIndex"
+            :col="colIndex"
+            :number="col.number"
+            :hasMine="col.hasMine"
+            :opened="col.opened"
+            :flagged="col.flagged"
+            :badFlagged="col.badFlagged"
+            :frozen="isGameOver || isCleared"
+            @open="open"
+            @flag="flag" />
+        </div>
       </div>
-    </div>
-    <!-- <p>開放可能なマス残り: {{ safeCountOfRemaining }}</p> -->
-    <!-- <p v-if="isStarted">開けていない地雷マス残り: {{ hiddenMineCountOfRemaining }}</p> -->
-    <div class="alert alert-gameover"
-      v-if="isGameOver && hiddenMineCountOfRemaining === 0" @click="init">
-      <p>ゲームオーバー</p>
-    </div>
-    <div class="alert alert-cleared" v-if="isCleared" @click="init">
-      <p>ゲームクリア</p>
     </div>
   </div>
 </template>
 
 <style lang="scss">
+@import "../assets/scss/_common";
+
 #panel {
+  $border-width: 5px;
+  border-top: $border-width solid #808080;
+  border-right: $border-width solid #dfdfdf;
+  border-bottom: $border-width solid #dfdfdf;
+  border-left: $border-width solid #808080;
+  box-sizing: border-box;
+  background: lightgray;
+  margin: 0 auto;
+
   .row {
     display: flex;
     justify-content: center;
+
+    &:first-child {
+      .col {
+        label {
+          border-top: none;
+        }
+      }
+    }
+    &:last-child {
+      .col {
+        label {
+          border-bottom: none;
+        }
+      }
+    }
   }
 
-  .alert {
-    position: fixed;
-    width: 100vw;
-    height: 100px;
-    top: calc(50% - 100px);
-    text-align: center;
-    padding: 1rem 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    &.alert-gameover {
-      background: yellow;
+  .col {
+    &:first-child {
+      label {
+        border-left: none;
+      }
     }
-    &.alert-cleared {
-      background: cyan;
-    }
-
-    p {
-      font-size: 2rem;
+    &:last-child {
+      label {
+        border-right: none;
+      }
     }
   }
 }

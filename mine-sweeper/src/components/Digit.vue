@@ -14,13 +14,12 @@
 </template>
 
 <style lang="scss">
-$size: 0.3;
+$size: 0.5;
 $color: #f00;
 $backColor: #511;
 
 .digit {
   .display {
-    display: inline-block;
     box-sizing: border-box;
     position: relative;
     width: 60px * $size;
