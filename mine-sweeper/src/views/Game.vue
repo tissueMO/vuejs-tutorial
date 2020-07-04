@@ -200,16 +200,11 @@ export default {
   },
   methods: {
     start () {
-      console.log('START')
       this.timeSecondsCount = 0
       const that = this
-      this.timer = setInterval(
-        () => that.timeSecondsCount = Math.min(that.timeSecondsCount + 1, 999),
-        1000
-      )
+      this.timer = setInterval(() => that.timeSecondsCount++, 1000)
     },
     end (cleared) {
-      console.log('END')
       this.emotion = cleared ? 'laugh-beam' : 'dizzy'
       clearInterval(this.timer)
     },

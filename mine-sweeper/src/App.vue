@@ -8,6 +8,6 @@
 import 'reset-css'
 
 export default {
-  name: 'App'
+  name: 'App',
 }
 </script>

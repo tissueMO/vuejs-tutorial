@@ -11,7 +11,7 @@
             :opened="col.opened"
             :flagged="col.flagged"
             :badFlagged="col.badFlagged"
-            :frozen="isGameOver || isCleared"
+            :frozen="frozen"
             @open="open"
             @flag="flag" />
         </div>
@@ -88,6 +88,7 @@ export default {
       isCleared: false,
       isGameOver: false,
       tiles: [],
+      timers: [],
     }
   },
   props: {
@@ -175,7 +176,12 @@ export default {
           )
         ).flat()
       }
-    }
+    },
+    frozen: {
+      get () {
+        return this.isGameOver || this.isCleared
+      }
+    },
   },
   methods: {
     // 盤面を初期化
@@ -183,6 +189,8 @@ export default {
       this.isStarted = false
       this.isCleared = false
       this.isGameOver = false
+      this.timers.forEach(timer => clearTimeout(timer))
+      this.timers = []
       this.$emit('reset')
 
       // 空の盤面を生成
@@ -268,6 +276,10 @@ export default {
 
     // 任意のマスのフラグを切り替える
     flag (e) {
+      if (this.frozen) {
+        return
+      }
+
       const row = e[0]
       const col = e[1]
 
@@ -317,14 +329,16 @@ export default {
           })
         )
       }
+
+      // ゲームクリア
       if (this.safeCountOfRemaining === 0 && !this.isCleared) {
-        // ゲームクリア
-        this.isCleared = true
         this.$emit('end', true)
 
         // 残った地雷マスにすべてフラグを立てる
         const that = this
-        this.closedTiles.forEach(tile => that.flag([tile.row, tile.col]))
+        this.closedTiles.forEach(tile => that._flagForce(tile.row, tile.col))
+
+        this.isCleared = true
       }
     },
 
@@ -335,12 +349,15 @@ export default {
       const openTargetTiles = mines.concat(flags)
       shuffle(openTargetTiles)
 
+      this.timers = []
       openTargetTiles.forEach((tile, i) => {
         if (tile.hasMine || tile.flagged) {
           const that = this
-          setTimeout(
-            () => that._openSilently(tile.row, tile.col),
-            50 * (i + 1)
+          this.timers.push(
+            setTimeout(
+              () => that._openSilently(tile.row, tile.col),
+              50 * (i + 1)
+            )
           )
         }
       })
@@ -354,6 +371,14 @@ export default {
       })
       this.tiles[row].splice(col, 1, this.tiles[row][col])
     },
+
+    // 強制的にフラグを置く (システム用)
+    _flagForce (row, col) {
+      this.tiles[row][col] = Object.assign(this.tiles[row][col], {
+        flagged: true,
+      })
+      this.tiles[row].splice(col, 1, this.tiles[row][col])
+    }
   },
 }
 </script>
