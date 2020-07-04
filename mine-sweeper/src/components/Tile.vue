@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tile">
     <input
       type="checkbox"
       :id="id"
@@ -10,10 +10,45 @@
       :for="id"
       :class="[numberClass, openedClass, mineClass, flaggedClass, badFlaggedClass]"
       @click.right.prevent="$emit('flag', [row, col])" />
+    <font-awesome-icon
+      class="fa fa-bomb"
+      icon="bomb"
+      v-if="opened && hasMine" />
+    <font-awesome-icon
+      class="fa fa-flag"
+      icon="flag"
+      v-if="!opened && flagged"
+      @click.right.prevent="$emit('flag', [row, col])" />
+    <font-awesome-icon
+      class="fa fa-times"
+      icon="times"
+      v-if="opened && badFlagged" />
   </div>
 </template>
 
 <style lang="scss">
+.tile {
+  position: relative;
+  user-select: none;
+}
+
+.fa {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &.fa-flag {
+    color: white;
+  }
+  &.fa-bomb {
+    color: black;
+  }
+  &.fa-times {
+    color: red;
+  }
+}
+
 input[type="checkbox"] {
   display: none;
 
@@ -29,27 +64,19 @@ input[type="checkbox"] {
 
     background-color: #000;
 
-    &.flagged {
-      background-color: blue;
-    }
-
     &.opened {
       background-color: #fff;
 
       &.mine {
         background-color: red;
 
-        &.flagged-bad {
-          &:after {
-            content: '\d7';
-            font-size: 1rem;
-            line-height: 1.25rem;
-          }
+        &.flagged {
+          background-color: yellow;
         }
       }
 
       @for $i from 1 through 8 {
-        &.number-#{$i} {
+        &.number-#{$i}:not(.flagged-bad) {
           &:after {
             content: '#{$i}';
             font-size: 1rem;
@@ -105,6 +132,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    frozen: {
+      type: Boolean,
+      default: false,
+    }
   },
   watch: {
     number () {
@@ -112,9 +143,6 @@ export default {
     },
     opened () {
       this.openedClass = this.opened ? 'opened' : ''
-      this.mineClass = (this.hasMine && this.opened) ? 'mine' : ''
-    },
-    hasMine () {
       this.mineClass = (this.hasMine && this.opened) ? 'mine' : ''
     },
     flagged () {
@@ -132,7 +160,7 @@ export default {
     },
     canOpen: {
       get () {
-        return !this.opened && !this.flagged
+        return !this.opened && !this.flagged && !this.frozen
       },
     },
   }

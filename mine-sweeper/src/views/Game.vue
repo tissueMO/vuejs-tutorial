@@ -1,13 +1,13 @@
 <template>
   <div id="game">
-    <fieldset>
-      <label for="">難易度: </label>
-      <select v-model="selectedLevel">
+    <div class="form-group">
+      <label for="level">難易度: </label>
+      <select id="level" v-model="selectedLevel">
         <option
           v-for="(level, name) in levels"
           :key="level.difficulity">{{ name }}</option>
       </select>
-    </fieldset>
+    </div>
 
     <Panel
       :timeSecondsLimit="levels[selectedLevel].timeSecondsLimit"
@@ -18,6 +18,16 @@
 </template>
 
 <style lang="scss">
+.form-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem 0;
+
+  label {
+    margin-right: 0.5rem;
+  }
+}
 </style>
 
 <script>
@@ -33,7 +43,7 @@ export default {
           difficulity: 0,
           sizeWidth: 7,
           sizeHeight: 7,
-          mineCount: 1,
+          mineCount: 2,
         },
         "普通": {
           difficulity: 1,

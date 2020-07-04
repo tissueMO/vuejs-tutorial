@@ -10,11 +10,20 @@
           :opened="col.opened"
           :flagged="col.flagged"
           :badFlagged="col.badFlagged"
+          :frozen="isGameOver || isCleared"
           @open="open"
           @flag="flag" />
       </div>
     </div>
-    <span>開放可能なマス残り: {{ safeCountOfRemaining }}</span>
+    <!-- <p>開放可能なマス残り: {{ safeCountOfRemaining }}</p> -->
+    <!-- <p v-if="isStarted">開けていない地雷マス残り: {{ hiddenMineCountOfRemaining }}</p> -->
+    <div class="alert alert-gameover"
+      v-if="isGameOver && hiddenMineCountOfRemaining === 0" @click="init">
+      <p>ゲームオーバー</p>
+    </div>
+    <div class="alert alert-cleared" v-if="isCleared" @click="init">
+      <p>ゲームクリア</p>
+    </div>
   </div>
 </template>
 
@@ -23,10 +32,34 @@
   display: flex;
   justify-content: center;
 }
+
+.alert {
+  position: fixed;
+  width: 100vw;
+  height: 100px;
+  top: calc(50% - 100px);
+  text-align: center;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.alert-gameover {
+    background: yellow;
+  }
+  &.alert-cleared {
+    background: cyan;
+  }
+
+  p {
+    font-size: 2rem;
+  }
+}
 </style>
 
 <script>
 import Tile from './Tile'
+import shuffle from 'shuffle-array'
 
 const OFFSET_MATRIX = [
   [[-1, -1], [0, -1], [1, -1]],
@@ -41,6 +74,7 @@ export default {
     return {
       isStarted: false,
       isCleared: false,
+      isGameOver: false,
       tiles: []
     }
   },
@@ -71,11 +105,9 @@ export default {
   },
   watch: {
     sizeWidth () {
-      console.log("変更検知")
       this.init()
     },
     sizeHeight () {
-      console.log("変更検知")
       this.init()
     },
   },
@@ -91,12 +123,51 @@ export default {
         )
       },
     },
+    hiddenMineCountOfRemaining: {
+      get () {
+        return this.tiles.reduce(
+          (accumulator, row) => accumulator + row.reduce(
+            (acc, col) => acc + ((!col.opened && col.hasMine) ? 1 : 0),
+            0
+          ),
+          0
+        )
+      },
+    },
+    mineTiles: {
+      get () {
+        return this.tiles.map(
+          row => row.filter(
+            col => col.hasMine
+          )
+        ).flat()
+      },
+    },
+    flaggedTiles: {
+      get () {
+        return this.tiles.map(
+          row => row.filter(
+            col => col.flagged
+          )
+        ).flat()
+      },
+    },
+    closedTiles: {
+      get () {
+        return this.tiles.map(
+          row => row.filter(
+            col => !col.opened
+          )
+        ).flat()
+      }
+    }
   },
   methods: {
     // 盤面を初期化
     init () {
       this.isStarted = false
       this.isCleared = false
+      this.isGameOver = false
 
       // 空の盤面を生成
       this.tiles = [...Array(this.sizeHeight)].map(
@@ -204,12 +275,8 @@ export default {
 
       if (this.tiles[row][col].hasMine) {
         // ゲームオーバー
+        this.isGameOver = true
         this.openMinesAll()
-        const that = this
-        setTimeout(() => {
-          alert('BOMB!!')
-          that.init()
-        }, 10)
       }
       if (this.tiles[row][col].number === 0) {
         // 再帰的に周囲のマスを開ける
@@ -235,32 +302,38 @@ export default {
       if (this.safeCountOfRemaining === 0 && !this.isCleared) {
         // ゲームクリア
         this.isCleared = true
+
+        // 残った地雷マスにすべてフラグを立てる
         const that = this
-        setTimeout(() => {
-          alert('CONGLATULATIONS!!')
-          that.init()
-        }, 10)
+        this.closedTiles.forEach(tile => that.flag([tile.row, tile.col]))
       }
     },
 
     // すべての地雷マスを開ける
     openMinesAll () {
-      this.tiles.forEach((row, rowIndex) =>
-        row.forEach((col, colIndex) => {
-          if (col.hasMine) {
-            this.tiles[rowIndex][colIndex] = Object.assign(this.tiles[rowIndex][colIndex], {
-              opened: true,
-            })
-            if (col.flagged) {
-              // フラグ失敗
-              this.tiles[rowIndex][colIndex] = Object.assign(this.tiles[rowIndex][colIndex], {
-                badFlagged: true,
-              })
-            }
-            this.tiles[rowIndex].splice(colIndex, 1, this.tiles[rowIndex][colIndex])
-          }
-        })
-      )
+      const mines = this.mineTiles
+      const flags = this.flaggedTiles
+      const openTargetTiles = mines.concat(flags)
+      shuffle(openTargetTiles)
+
+      openTargetTiles.forEach((tile, i) => {
+        if (tile.hasMine || tile.flagged) {
+          const that = this
+          setTimeout(
+            () => that._openSilently(tile.row, tile.col),
+            50 * (i + 1)
+          )
+        }
+      })
+    },
+
+    // 指定マスを開ける (システム用)
+    _openSilently (row, col) {
+      this.tiles[row][col] = Object.assign(this.tiles[row][col], {
+        opened: true,
+        badFlagged: !this.tiles[row][col].hasMine && this.tiles[row][col].flagged,
+      })
+      this.tiles[row].splice(col, 1, this.tiles[row][col])
     },
   },
 }
