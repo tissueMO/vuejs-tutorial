@@ -8,12 +8,18 @@
           :key="level.difficulity">{{ name }}</option>
       </select>
     </div>
+    <p>
+      経過時間: {{ timeSecondsCount }}
+    </p>
 
     <Panel
       :timeSecondsLimit="levels[selectedLevel].timeSecondsLimit"
       :sizeWidth="levels[selectedLevel].sizeWidth"
       :sizeHeight="levels[selectedLevel].sizeHeight"
-      :mineCount="levels[selectedLevel].mineCount" />
+      :mineCount="levels[selectedLevel].mineCount"
+      @start="start"
+      @end="end"
+      @reset="reset" />
   </div>
 </template>
 
@@ -59,10 +65,27 @@ export default {
         },
       },
       selectedLevel: '',
+      timeSecondsCount: 0,
+      timer: null,
     }
   },
   created () {
     this.selectedLevel = Object.keys(this.levels)[0]
+  },
+  methods: {
+    start () {
+      console.log('START')
+      this.timeSecondsCount = 0
+      const that = this
+      this.timer = setInterval(() => that.timeSecondsCount++, 1000)
+    },
+    end () {
+      console.log('END')
+      clearInterval(this.timer)
+    },
+    reset () {
+      this.timeSecondsCount = 0
+    },
   },
 }
 </script>

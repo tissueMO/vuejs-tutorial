@@ -75,7 +75,7 @@ export default {
       isStarted: false,
       isCleared: false,
       isGameOver: false,
-      tiles: []
+      tiles: [],
     }
   },
   props: {
@@ -168,6 +168,7 @@ export default {
       this.isStarted = false
       this.isCleared = false
       this.isGameOver = false
+      this.$emit('reset')
 
       // 空の盤面を生成
       this.tiles = [...Array(this.sizeHeight)].map(
@@ -196,6 +197,7 @@ export default {
     // 任意のマスを開けてゲームを始める
     start (row, col) {
       this.isStarted = true
+      this.$emit('start')
 
       // 指定されたマスに地雷を埋めないようにして地雷を配置
       let putCount = 0;
@@ -276,6 +278,7 @@ export default {
       if (this.tiles[row][col].hasMine) {
         // ゲームオーバー
         this.isGameOver = true
+        this.$emit('end')
         this.openMinesAll()
       }
       if (this.tiles[row][col].number === 0) {
@@ -302,6 +305,7 @@ export default {
       if (this.safeCountOfRemaining === 0 && !this.isCleared) {
         // ゲームクリア
         this.isCleared = true
+        this.$emit('end')
 
         // 残った地雷マスにすべてフラグを立てる
         const that = this
