@@ -1,5 +1,11 @@
 <template>
   <div id="game">
+    <div class="logo">
+      <img src="../assets/logo.svg">
+      マインスイーパー
+      <img src="../assets/logo.svg">
+    </div>
+
     <div class="form-group">
       <label for="level">難易度: </label>
       <select id="level" v-model="selectedLevelName">
@@ -36,6 +42,8 @@
 </template>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@900&display=swap');
+
 #game {
   .flex {
     display: flex;
@@ -43,8 +51,24 @@
     align-items: center;
   }
 
+  .logo {
+    @extend .flex;
+
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 3rem;
+    margin-bottom: 3rem;
+    color: #444;
+
+    img {
+      width: 5rem;
+      height: 5rem;
+      margin: 0 1rem;
+    }
+  }
+
   .form-group {
     @extend .flex;
+
     margin: 0.5rem 0;
 
     label {
