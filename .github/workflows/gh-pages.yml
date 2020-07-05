@@ -9,11 +9,6 @@ on:
     branches:
       - master
 
-defaults:
-  run:
-    shell: bash
-    working-directory: ${{ secrets.MINESWEEPER_PATH }}
-
 jobs:
   build:
     # Webブラウザー向けに静的コンテンツのビルドを行う
@@ -37,10 +32,12 @@ jobs:
 
       - name: Install dependencies
         run: yarn
+        working-directory: ${{ secrets.MINESWEEPER_PATH }}
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Build for production
         run: yarn run build
+        working-directory: ${{ secrets.MINESWEEPER_PATH }}
 
       - name: Upload result for next job
         uses: actions/upload-artifact@v1
