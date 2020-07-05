@@ -12,7 +12,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./mine-sweeper
+    working-directory: ${{ secrets.MINESWEEPER_PATH }}
 
 jobs:
   build:
@@ -31,7 +31,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ~/.cache/yarn
-          key: ${{ runner.os }}-${{ github.repository }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mine-sweeper/yarn.lock')) }}
+          key: ${{ runner.os }}-${{ github.repository }}-${{ hashFiles(format('{0}{1}', github.workspace, '${{ secrets.MINESWEEPER_PATH }}/yarn.lock')) }}
           restore-keys:
             ${{ runner.os }}-${{ github.repository }}-
 
@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: dist
-          path: /mine-sweeper/dist
+          path: ${{ secrets.MINESWEEPER_PATH }}/dist
 
   deploy:
     # ビルドした静的コンテンツを GitHub Pages にデプロイする
