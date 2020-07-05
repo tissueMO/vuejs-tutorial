@@ -26,7 +26,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ~/.cache/yarn
-          key: ${{ runner.os }}-${{ github.repository }}-${{ hashFiles(format('{0}{1}', github.workspace, '/mine-sweeper/yarn.lock')) }}
+          key: ${{ runner.os }}-${{ github.repository }}-${{ hashFiles(format('{0}{1}', github.workspace, '${{ secrets.MINESWEEPER_PATH }}/yarn.lock')) }}
           restore-keys:
             ${{ runner.os }}-${{ github.repository }}-
 
@@ -41,10 +41,9 @@ jobs:
 
       - name: Upload result for next job
         uses: actions/upload-artifact@v1
-        working-directory: ${{ secrets.MINESWEEPER_PATH }}
         with:
           name: dist
-          path: dist
+          path: ${{ secrets.MINESWEEPER_PATH }}/dist
 
   deploy:
     # ビルドした静的コンテンツを GitHub Pages にデプロイする
@@ -61,4 +60,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: dist
+          publish_dir: ${{ secrets.MINESWEEPER_PATH }}/dist
