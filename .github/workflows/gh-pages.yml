@@ -9,6 +9,11 @@ on:
     branches:
       - master
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ${{ secrets.MINESWEEPER_PATH }}
+
 jobs:
   build:
     # Webブラウザー向けに静的コンテンツのビルドを行う
@@ -26,24 +31,22 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ~/.cache/yarn
-          key: ${{ runner.os }}-${{ github.repository }}-${{ hashFiles(format('{0}{1}', github.workspace, '${{ secrets.MINESWEEPER_PATH }}/yarn.lock')) }}
+          key: ${{ runner.os }}-${{ github.repository }}-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
           restore-keys:
             ${{ runner.os }}-${{ github.repository }}-
 
       - name: Install dependencies
         run: yarn
         if: steps.cache.outputs.cache-hit != 'true'
-        working-directory: ${{ secrets.MINESWEEPER_PATH }}
 
       - name: Build for production
         run: yarn run build
-        working-directory: ${{ secrets.MINESWEEPER_PATH }}
 
       - name: Upload result for next job
         uses: actions/upload-artifact@v1
         with:
           name: dist
-          path: ${{ secrets.MINESWEEPER_PATH }}/dist
+          path: dist
 
   deploy:
     # ビルドした静的コンテンツを GitHub Pages にデプロイする
@@ -60,4 +63,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ secrets.MINESWEEPER_PATH }}/dist
+          publish_dir: dist
