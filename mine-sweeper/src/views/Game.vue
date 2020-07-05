@@ -20,8 +20,9 @@
         <div class="indicators-wrapper form-group">
           <div class="indicators">
             <!-- 地雷数 -->
-            <Digits :value="selectedLevel.mineCount" :digitSize="3" />
+            <Digits :value="selectedLevelDetail.mineCount" :digitSize="3" />
 
+            <!-- リセットボタン: ニコちゃんマーク -->
             <div class="face button" @click="init">
               <div class="face-background mx-auto">
                 <font-awesome-icon
@@ -36,11 +37,11 @@
           </div>
         </div>
 
+        <!-- タイルが敷き詰められたパネル -->
         <Panel
-          :timeSecondsLimit="selectedLevel.timeSecondsLimit"
-          :sizeWidth="selectedLevel.sizeWidth"
-          :sizeHeight="selectedLevel.sizeHeight"
-          :mineCount="selectedLevel.mineCount"
+          :sizeWidth="selectedLevelDetail.sizeWidth"
+          :sizeHeight="selectedLevelDetail.sizeHeight"
+          :mineCount="selectedLevelDetail.mineCount"
           @start="start"
           @end="end"
           @reset="reset" />
@@ -92,26 +93,15 @@
 
   .game-wrapper {
     .game {
-      $border-width: 8px;
-      border-top: $border-width solid #eeeeee;
-      border-right: $border-width solid #808080;
-      border-bottom: $border-width solid #808080;
-      border-left: $border-width solid #eeeeee;
+      @include border-3d(8px, #eeeeee, #808080, lightgray);
       display: inline-block;
       padding: 12px;
-      background: lightgray;
     }
   }
 
   .indicators {
-    $border-width: 4px;
-    border-top: $border-width solid #808080;
-    border-right: $border-width solid #dfdfdf;
-    border-bottom: $border-width solid #dfdfdf;
-    border-left: $border-width solid #808080;
-    box-sizing: border-box;
+    @include border-3d(4px, #808080, #dfdfdf, lightgray);
     display: inline-flex;
-    background: lightgray;
     margin: 0;
     margin-bottom: 0.5rem;
     padding: 0.5rem 0.8rem;
@@ -132,13 +122,12 @@
       margin: 0 0.5rem;
 
       .face-background {
+        @extend .flex;
+
         width: 3rem;
         height: 3rem;
         border-radius: 50%;
         position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         background-color: #000;
 
         .fa-face {
@@ -164,6 +153,19 @@ export default {
   },
   data: function () {
     return {
+      // 選択された難易度のキー
+      selectedLevelName: '',
+
+      // 経過秒数
+      timeSecondsCount: 0,
+
+      // 経過秒数タイマー
+      timer: null,
+
+      // ニコちゃんマークの表情名 (FontAwesome のアイコン名に対応)
+      emotion: 'smile',
+
+      // 難易度マスター
       levels: {
         "簡単": {
           difficulity: 0,
@@ -184,36 +186,42 @@ export default {
           mineCount: 99,
         },
       },
-      selectedLevelName: '',
-      timeSecondsCount: 0,
-      timer: null,
-      emotion: 'smile',
     }
   },
   computed: {
-    selectedLevel () {
+    // 選択された難易度の詳細情報
+    selectedLevelDetail () {
       return !this.selectedLevelName ? null : this.levels[this.selectedLevelName]
     },
   },
   created () {
+    // デフォルトの難易度を選択
     this.selectedLevelName = Object.keys(this.levels)[0]
   },
   methods: {
     start () {
+      // タイマー計測を開始
       this.timeSecondsCount = 0
       const that = this
       this.timer = setInterval(() => that.timeSecondsCount++, 1000)
     },
     end (cleared) {
+      // ゲームの結果に応じてニコちゃんマークの表情を切り替える
       this.emotion = cleared ? 'laugh-beam' : 'dizzy'
+
+      // タイマー計測を停止
       clearInterval(this.timer)
     },
     reset () {
+      // ニコちゃんマークの表情をニュートラルに戻す
       this.emotion = 'smile'
+
+      // タイマー計測を停止
       this.timeSecondsCount = 0
       clearInterval(this.timer)
     },
     init () {
+      // ゲーム親からパネルに向けて初期化を促す
       eventBus.$emit('init')
     },
   },

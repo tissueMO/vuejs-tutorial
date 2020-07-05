@@ -51,3 +51,12 @@
     }
   }
 }
+
+@mixin border-3d($border-width, $lefttop-color, $rightbottom-color, $background-color) {
+  border-top: $border-width solid $lefttop-color;
+  border-left: $border-width solid $lefttop-color;
+  border-right: $border-width solid $rightbottom-color,;
+  border-bottom: $border-width solid $rightbottom-color,;
+  box-sizing: border-box;
+  background: $background-color;
+}

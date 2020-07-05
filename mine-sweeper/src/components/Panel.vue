@@ -24,18 +24,11 @@
 @import "../assets/scss/_common";
 
 #panel {
-  $border-width: 5px;
-  border-top: $border-width solid #808080;
-  border-right: $border-width solid #dfdfdf;
-  border-bottom: $border-width solid #dfdfdf;
-  border-left: $border-width solid #808080;
-  box-sizing: border-box;
-  background: lightgray;
+  @include border-3d(5px, #808080, #dfdfdf, lightgray);
   margin: 0 auto;
 
   .row {
-    display: flex;
-    justify-content: center;
+    @extend .flex;
 
     &:first-child {
       .col {
@@ -92,11 +85,6 @@ export default {
     }
   },
   props: {
-    timeSecondsLimit: {
-      type: Number,
-      required: false,
-      default: null,
-    },
     sizeWidth: {
       type: Number,
       required: true,

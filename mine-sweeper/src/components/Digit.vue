@@ -1,31 +1,26 @@
 <template>
+  <!-- 単一数字: 7セグメントデジタル数字 -->
   <div class="digit">
-    <div class="display d0" v-if="number === 0"></div>
-    <div class="display d1" v-if="number === 1"></div>
-    <div class="display d2" v-if="number === 2"></div>
-    <div class="display d3" v-if="number === 3"></div>
-    <div class="display d4" v-if="number === 4"></div>
-    <div class="display d5" v-if="number === 5"></div>
-    <div class="display d6" v-if="number === 6"></div>
-    <div class="display d7" v-if="number === 7"></div>
-    <div class="display d8" v-if="number === 8"></div>
-    <div class="display d9" v-if="number === 9"></div>
+    <div v-for="(n, i) in 10" :key="i">
+      <div class="display" :class="['d' + i]" v-if="number === i"></div>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
+// サイズは倍率で指定
 $size: 0.5;
 $color: #f00;
 $backColor: #511;
 
 .digit {
   .display {
-    box-sizing: border-box;
-    position: relative;
     width: 60px * $size;
     height: 100px * $size;
     border: solid 4px * $size #111;
     background-color: #111;
+    box-sizing: border-box;
+    position: relative;
     overflow: hidden;
 
     &::before {
@@ -154,10 +149,11 @@ $backColor: #511;
 export default {
   name: 'Digit',
   props: {
+    // 7セグメントデジタル数字で表現する一桁の整数値
     number: {
       type: Number,
       default: 0,
-    }
+    },
   },
 }
 </script>

@@ -1,8 +1,9 @@
 <template>
+  <!-- 任意の整数値を7セグメントデジタル数字で表現する -->
   <div class="digits">
     <Digit
-      v-for="(digit, index) in digits"
-      :key="index"
+      v-for="(digit, i) in digits"
+      :key="i"
       :number="digit" />
   </div>
 </template>
@@ -11,17 +12,9 @@
 @import "../assets/scss/_common";
 
 .digits {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @extend .flex;
+  @include border-3d(2px, #808080, #dfdfdf, lightgray);
   align-self: flex-end;
-
-  $border-width: 2px;
-  border-top: $border-width solid #808080;
-  border-right: $border-width solid #dfdfdf;
-  border-bottom: $border-width solid #dfdfdf;
-  border-left: $border-width solid #808080;
-  box-sizing: border-box;
 }
 </style>
 
@@ -32,20 +25,24 @@ export default {
   name: 'Digits',
   components: { Digit },
   props: {
+    // 7セグメントデジタル数字で表現する任意の整数値
     value: {
       type: Number,
       default: 0,
     },
+    // 表示可能な桁数 (これを超えた値はカンスト表示になる)
     digitSize: {
       type: Number,
       default: 3,
     },
   },
   computed: {
+    // 現在の値を桁ごとに分解した配列を返す
     digits: {
       get () {
-        const digits = []
+        // 表示値をカンスト処理
         let value = Math.min(this.value, Math.pow(10, this.digitSize) - 1)
+        const digits = []
 
         for (let i = 0; i < this.digitSize; i++) {
           // 1の位を取得し続ける
