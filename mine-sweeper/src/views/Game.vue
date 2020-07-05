@@ -151,6 +151,7 @@ export default {
     Panel,
     Digits,
   },
+
   data: function () {
     return {
       // 選択された難易度のキー
@@ -171,7 +172,7 @@ export default {
           difficulity: 0,
           sizeWidth: 9,
           sizeHeight: 9,
-          mineCount: 10,
+          mineCount: 2,
         },
         "普通": {
           difficulity: 1,
@@ -188,23 +189,32 @@ export default {
       },
     }
   },
+
   computed: {
     // 選択された難易度の詳細情報
     selectedLevelDetail () {
       return !this.selectedLevelName ? null : this.levels[this.selectedLevelName]
     },
   },
+
   created () {
     // デフォルトの難易度を選択
     this.selectedLevelName = Object.keys(this.levels)[0]
   },
+
   methods: {
+    init () {
+      // イベントバスを通してゲーム親側から子コンポーネントに向けて初期化を促す
+      eventBus.$emit('init')
+    },
+
     start () {
       // タイマー計測を開始
       this.timeSecondsCount = 0
       const that = this
       this.timer = setInterval(() => that.timeSecondsCount++, 1000)
     },
+
     end (cleared) {
       // ゲームの結果に応じてニコちゃんマークの表情を切り替える
       this.emotion = cleared ? 'laugh-beam' : 'dizzy'
@@ -212,6 +222,7 @@ export default {
       // タイマー計測を停止
       clearInterval(this.timer)
     },
+
     reset () {
       // ニコちゃんマークの表情をニュートラルに戻す
       this.emotion = 'smile'
@@ -219,10 +230,6 @@ export default {
       // タイマー計測を停止
       this.timeSecondsCount = 0
       clearInterval(this.timer)
-    },
-    init () {
-      // ゲーム親からパネルに向けて初期化を促す
-      eventBus.$emit('init')
     },
   },
 }

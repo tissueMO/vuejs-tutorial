@@ -1,5 +1,7 @@
 <template>
+  <!-- 地雷が埋め込まれているかもしれない単一のタイル -->
   <div class="tile button" :class="[{'button-disabled': !canOpen}]">
+    <!-- 内部的にはチェックボックスの切り替えで表現する -->
     <input
       type="checkbox"
       :id="id"
@@ -7,6 +9,7 @@
       :disabled="!canOpen"
       @click="$emit('open', [row, col])" />
 
+    <!-- 開けた後に見えるようになる下地 -->
     <label
       :for="id"
       :class="[numberClass, openedClass, mineClass, flaggedClass, badFlaggedClass]"
@@ -15,22 +18,19 @@
     <!-- 地雷 -->
     <transition name="transition-bomb">
       <font-awesome-icon
-        class="fa fa-bomb"
-        icon="bomb" size="lg"
+        class="fa fa-bomb" icon="bomb" size="lg"
         v-if="opened && hasMine" />
     </transition>
 
     <!-- フラグ -->
     <font-awesome-icon
-      class="fa fa-flag"
-      icon="flag" size="lg"
+      class="fa fa-flag" icon="flag" size="lg"
       v-if="!opened && flagged"
       @click.right.prevent="$emit('flag', [row, col])" />
 
-    <!-- 地雷ではないマスに立てたフラグのアイコン -->
+    <!-- 地雷ではないタイルに立てたスカフラグのアイコン -->
     <font-awesome-icon
-      class="fa fa-times"
-      icon="times" size="lg"
+      class="fa fa-times" icon="times" size="lg"
       v-if="opened && badFlagged" />
   </div>
 </template>
@@ -47,17 +47,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(1);
-    width: 100%;
-
-    &.fa-flag {
-      color: red;
-    }
-    &.fa-bomb {
-      color: black;
-    }
-    &.fa-times {
-      color: red;
-    }
 
     // 地雷爆発トランジション
     &.transition-bomb {
@@ -77,6 +66,17 @@
         }
       }
     }
+
+    // 各種アイコンの色
+    &.fa-flag {
+      color: red;
+    }
+    &.fa-bomb {
+      color: black;
+    }
+    &.fa-times {
+      color: red;
+    }
   }
 
   input[type="checkbox"] {
@@ -84,12 +84,14 @@
 
     & + label {
       $size: 32px;
-      user-select: none;
 
-      display: block;
       width: $size;
       height: $size;
+      display: block;
       text-align: center;
+
+      // 右クリック抑制
+      user-select: none;
 
       &.opened {
         background: lightgray;
@@ -104,6 +106,7 @@
           }
         }
 
+        // 開けた後に見える数字
         @for $i from 1 through 8 {
           &.number-#{$i}:not(.flagged-bad) {
             &:after {
@@ -149,51 +152,79 @@
 <script>
 export default {
   name: 'Tile',
+
   data: function () {
     return {
+      // 開けた後に見えるようになる数字を表すクラス名
       numberClass: '',
+
+      // 開けたかどうかを表すクラス名
       openedClass: '',
+
+      // 地雷が見えているかどうかを表すクラス名
       mineClass: '',
+
+      // フラグが立てられているかどうかを表すクラス名
       flaggedClass: '',
+
+      // 地雷がないところに立てられたスカフラグであるかどうかを表すクラス名
       badFlaggedClass: '',
     }
   },
+
   props: {
+    // パネル上の行番号
     row: {
       type: Number,
       required: true,
     },
+
+    // パネル上の列番号
     col: {
       type: Number,
       required: true,
     },
+
+    // 周囲8タイルにいくつの地雷が仕掛けられているかを表す数字
     number: {
       type: Number,
       required: true,
       default: 0,
     },
+
+    // 開けたかどうか
     opened: {
       type: Boolean,
       default: false,
     },
+
+    // 地雷が埋め込まれているかどうか
     hasMine: {
       type: Boolean,
       default: false,
     },
+
+    // フラグが立てられているかどうか
     flagged: {
       type: Boolean,
       default: false,
     },
+
+    // 地雷がないところに立てられたスカフラグであることを知らせるかどうか
     badFlagged: {
       type: Boolean,
       default: false,
     },
+
+    // プレイヤーから操作できない状態にするかどうか
     frozen: {
       type: Boolean,
       default: false,
-    }
+    },
   },
+
   watch: {
+    // タイルの状態変化を検知してクラス名を動的に更新する
     number () {
       this.numberClass = (this.number > 0) ? `number-${this.number}` : '';
     },
@@ -208,17 +239,21 @@ export default {
       this.badFlaggedClass = this.badFlagged ? 'flagged-bad' : ''
     },
   },
+
   computed: {
+    // このタイルを一意に表すIDを生成する
     id: {
       get () {
         return `tile-${this.row}-${this.col}`
       },
     },
+
+    // 開く操作を行える状態であるかどうかを返す
     canOpen: {
       get () {
         return !this.opened && !this.flagged && !this.frozen
       },
     },
-  }
+  },
 }
 </script>

@@ -24,18 +24,21 @@ import Digit from './Digit'
 export default {
   name: 'Digits',
   components: { Digit },
+
   props: {
     // 7セグメントデジタル数字で表現する任意の整数値
     value: {
       type: Number,
       default: 0,
     },
+
     // 表示可能な桁数 (これを超えた値はカンスト表示になる)
     digitSize: {
       type: Number,
       default: 3,
     },
   },
+
   computed: {
     // 現在の値を桁ごとに分解した配列を返す
     digits: {
