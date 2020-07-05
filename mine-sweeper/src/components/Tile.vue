@@ -13,7 +13,9 @@
     <label
       :for="id"
       :class="[numberClass, openedClass, mineClass, flaggedClass, badFlaggedClass]"
-      @click.right.prevent="$emit('flag', [row, col])" />
+      @click.right.prevent="$emit('flag', [row, col])"
+      @touchstart="touchstart([row, col])"
+      @touchend="touchend" />
 
     <!-- 地雷 -->
     <transition name="transition-bomb">
@@ -26,7 +28,9 @@
     <font-awesome-icon
       class="fa fa-flag" icon="flag" size="lg"
       v-if="!opened && flagged"
-      @click.right.prevent="$emit('flag', [row, col])" />
+      @click.right.prevent="$emit('flag', [row, col])"
+      @touchstart="touchstart([row, col])"
+      @touchend="touchend" />
 
     <!-- 地雷ではないタイルに立てたスカフラグのアイコン -->
     <font-awesome-icon
@@ -169,6 +173,9 @@ export default {
 
       // 地雷がないところに立てられたスカフラグであるかどうかを表すクラス名
       badFlaggedClass: '',
+
+      // スマホ向け: 長押しタイマー
+      timer: null,
     }
   },
 
@@ -253,6 +260,29 @@ export default {
       get () {
         return !this.opened && !this.flagged && !this.frozen
       },
+    },
+  },
+
+  methods: {
+    // スマホ向け: 長押しタップでフラグを立てる
+    touchstart (e) {
+      // イベント引数を分解
+      const [row, col] = e
+
+      // 一定時間経過後に離されていなければフラグを立てる
+      const that = this
+      this.timer = setTimeout(() => {
+        that.$emit('flag', [row, col])
+        that.timer = null
+      }, 1000)
+    },
+
+    // スマホ向け: 長押しタップキャンセル
+    touchend () {
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = null
+      }
     },
   },
 }
