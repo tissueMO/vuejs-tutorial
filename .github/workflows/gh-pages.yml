@@ -9,10 +9,10 @@ on:
     branches:
       - master
 
-# defaults:
-#   run:
-#     shell: bash
-#     working-directory: ./mine-sweeper
+defaults:
+  run:
+    shell: bash
+    working-directory: ./mine-sweeper
 
 jobs:
   build:
@@ -36,11 +36,11 @@ jobs:
             ${{ runner.os }}-${{ github.repository }}-
 
       - name: Install dependencies
-        run: cd ./mine-sweeper && yarn
+        run: yarn
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Build for production
-        run: cd ./mine-sweeper && yarn run build
+        run: yarn run build
 
       - name: Upload result for next job
         uses: actions/upload-artifact@v1
