@@ -9,10 +9,10 @@ on:
     branches:
       - master
 
-defaults:
-  run:
-    shell: bash
-    working-directory: ./mine-sweeper
+# defaults:
+#   run:
+#     shell: bash
+#     working-directory: ./mine-sweeper
 
 jobs:
   build:
