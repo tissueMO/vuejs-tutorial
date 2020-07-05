@@ -36,17 +36,17 @@ jobs:
             ${{ runner.os }}-${{ github.repository }}-
 
       - name: Install dependencies
-        run: ls -all && yarn
+        run: yarn
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Build for production
-        run: ls -all && yarn run build
+        run: yarn run build
 
       - name: Upload result for next job
         uses: actions/upload-artifact@v1
         with:
           name: dist
-          path: dist
+          path: /mine-sweeper/dist
 
   deploy:
     # ビルドした静的コンテンツを GitHub Pages にデプロイする
