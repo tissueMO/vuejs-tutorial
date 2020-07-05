@@ -172,7 +172,7 @@ export default {
           difficulity: 0,
           sizeWidth: 9,
           sizeHeight: 9,
-          mineCount: 2,
+          mineCount: 10,
         },
         "普通": {
           difficulity: 1,
