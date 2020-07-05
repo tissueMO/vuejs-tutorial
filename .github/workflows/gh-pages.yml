@@ -12,7 +12,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ${{ secrets.MINESWEEPER_PATH }}
+    working-directory: ./mine-sweeper
 
 jobs:
   build:
