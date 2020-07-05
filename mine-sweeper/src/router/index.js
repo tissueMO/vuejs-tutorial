@@ -21,7 +21,8 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  // 自前のWebサーバーで稼働させる場合は適宜サーバー側の設定を施した上でヒストリーモードを使うことを推奨
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
