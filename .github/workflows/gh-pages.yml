@@ -36,11 +36,11 @@ jobs:
             ${{ runner.os }}-${{ github.repository }}-
 
       - name: Install dependencies
-        run: yarn
+        run: ls -all && yarn
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Build for production
-        run: yarn run build
+        run: ls -all && yarn run build
 
       - name: Upload result for next job
         uses: actions/upload-artifact@v1
