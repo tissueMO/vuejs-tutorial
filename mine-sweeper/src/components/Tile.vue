@@ -13,10 +13,12 @@
       @click.right.prevent="$emit('flag', [row, col])" />
 
     <!-- 地雷 -->
-    <font-awesome-icon
-      class="fa fa-bomb"
-      icon="bomb" size="lg"
-      v-if="opened && hasMine" />
+    <transition name="transition-bomb">
+      <font-awesome-icon
+        class="fa fa-bomb"
+        icon="bomb" size="lg"
+        v-if="opened && hasMine" />
+    </transition>
 
     <!-- フラグ -->
     <font-awesome-icon
@@ -44,7 +46,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(1);
+    width: 100%;
 
     &.fa-flag {
       color: red;
@@ -54,6 +57,25 @@
     }
     &.fa-times {
       color: red;
+    }
+
+    // 地雷爆発トランジション
+    &.transition-bomb {
+      &-enter-active {
+        animation: bounce-in 0.5s;
+      }
+
+      @keyframes bounce-in {
+        0% {
+          transform: translate(-50%, -50%) scale(0);
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.5);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
     }
   }
 
