@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ステート | Vuex チュートリアル</title>
+</head>
+<body>
+
+  <!-- Vue 要素 -->
+  <div id="state"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuex@3.5.1/dist/vuex.js"></script>
+
+  <script>
+    // ストアを作る: ここで作ったステートが変更されるとき、これを使っているVueコンポーネントに対してリアクティブに更新されるようになる
+    const store = new Vuex.Store({
+      state: {
+        count: 0,
+        todos: [
+          { id: 1, text: '起きる', done: true },
+          { id: 2, text: '朝食を食べる', done: false },
+        ],
+      },
+      mutations: {
+        // ミューテーションハンドラーを登録することでストアに作ったステートを変更できるようになる
+        // しかも、直接この関数を呼び出して変更できるわけではなく、ストアのコミットを通してしか変更できない
+        // この仕組みがあることによって状態変更の追跡を実現しているため、この中で非同期処理を行ってはならない
+        increment (state) {
+          state.count++
+        },
+
+        // ミューテーションハンドラーの第2引数を受けることで追加情報を渡せる
+        // オブジェクトで渡すことで多くの情報を渡せるようになるため推奨されている
+        incrementBy (state, payload) {
+          state.count += payload.amount
+        },
+      },
+      getters: {
+        // getter はストアの算出プロパティに相当する
+        doneTodos: state => {
+          return state.todos.filter(todo => todo.done)
+        },
+
+        // 第2引数を受けることで他の getter を手に入れる
+        doneTodosCount: (state, getters) => {
+          return getters.doneTodos.length
+        },
+
+        // getter で取れるものを「関数」にしてしまえば引数付きの関数形式で呼べるようになる
+        // ただし、関数の呼び出し結果まではキャッシュしてくれない
+        getTodoById: state => id => {
+          return state.todos.find(todo => todo.id === id)
+        },
+      },
+    })
+
+    // コンポーネント
+    const Counter = {
+      template: `
+        <div>
+          {{ count }}
+          <button @click="increment">カウントアップ</button>
+          <button @click="incrementBy({amount: 10})">カウント10</button>
+        </div>
+      `,
+
+      computed:
+        {
+          // スプレッド演算子 ... を使って他の算出プロパティと共存させられる
+          ...Vuex.mapState([
+            // 算出プロパティの名前とステートサブツリー名が同じ場合は文字列の配列だけでいけちゃう
+            'count',
+          ]),
+        },
+
+        // 以下は mapState ヘルパーを使った最初の例
+        //Vuex.mapState({
+        //  // アロー関数使用OK
+        //  count: state => state.count,
+        //
+        //  // 文字列を使って別名を定義できる
+        //  cnt: 'count',
+        //}),
+
+        // 以下は最も冗長な書き方
+        //{
+        //  count () {
+        //    // 親から注入された store から状態を取り出す
+        //    return this.$store.state.count
+        //  },
+        //},
+
+      methods:
+        // mapState と同様に mapMutations ヘルパーで this.$store.commit(...) を短縮的にマッピングできる
+        {
+          ...Vuex.mapMutations([
+            'increment',
+            'incrementBy',
+          ]),
+        }
+
+        // 以下は冗長な書き方
+        //{
+        //  increment () {
+        //    this.$store.commit('increment')
+        //  },
+        //  incrementBy (amount) {
+        //    this.$store.commit('incrementBy', {
+        //      amount: 10,
+        //    })
+        //
+        //  //type 属性にミューテーションの名前を含めて一つのオブジェクトで渡してもよい
+        //    this.$store.commit({
+        //      type: 'incrementBy',
+        //      amount: 10,
+        //    })
+        //  },
+        //},
+    }
+
+    const TodoList = {
+      template: `
+        <div>
+          <p>完了タスク数: {{ doneTodosCount }}</p>
+          <p>ID=2 のタスク: {{ getTodoById(2) }}</p>
+        </div>
+      `,
+
+      computed:
+        {
+          // mapState と同様に mapGetters ヘルパーで getter をローカルの算出プロパティに組み込める
+          ...Vuex.mapGetters([
+            'doneTodosCount',
+            'getTodoById',
+          ]),
+        },
+
+        // 以下は最も冗長な書き方
+        //{
+        //  doneTodosCount() {
+        //    return this.$store.getters.doneTodosCount
+        //  },
+        //},
+    }
+
+    // ルートインスタンス
+    const state = new Vue({
+      el: '#state',
+
+      // コンポーネントに対しても store が注入される
+      store,
+
+      components: {
+        Counter,
+        TodoList,
+      },
+      template: `
+        <div class="app">
+          <Counter />
+          <hr>
+          <TodoList />
+        </div>
+      `,
+    })
+  </script>
+
+</body>
+</html>
