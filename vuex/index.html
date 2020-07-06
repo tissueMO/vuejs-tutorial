@@ -23,6 +23,7 @@
           { id: 2, text: '朝食を食べる', done: false },
         ],
       },
+
       mutations: {
         // ミューテーションハンドラーを登録することでストアに作ったステートを変更できるようになる
         // しかも、直接この関数を呼び出して変更できるわけではなく、ストアのコミットを通してしか変更できない
@@ -37,6 +38,7 @@
           state.count += payload.amount
         },
       },
+
       getters: {
         // getter はストアの算出プロパティに相当する
         doneTodos: state => {
@@ -54,15 +56,53 @@
           return state.todos.find(todo => todo.id === id)
         },
       },
+
+      actions: {
+        // アクションはミューテーションをコミットするだけ
+
+        // ES2015 の引数分割束縛 (引数に {...} を含めることで展開してくれる記法) が役立つ
+        increment ({ context }) {
+          commit('increment')
+        },
+        // 上記の省略しない書き方は以下
+        // increment (context) {
+        //   context.commit('increment')
+        // },
+
+        // ミューテーションとは異なり、アクションには非同期処理を含めてもよい
+        // incrementAsync ({ commit }) {
+        //   setTimeout(() => commit('increment'), 1000)
+        // },
+
+        // 非同期処理が終わったことを呼出元で検知できるようにするために...
+        incrementAsyncByPromise ({ commit }) {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              commit('increment')
+              resolve()
+            }, 500)
+          })
+        },
+        // 上記のようにすることで store.dispatch('incrementAsync').then(() => {...}) と待てるようになる
+
+        // 第2段階: async/await で非同期処理する
+        // 他のアクションを非同期で呼び出すこともできる
+        async incrementAsync ({ commit }) {
+          await this.dispatch('incrementAsyncByPromise')
+          // 任意の後続処理
+        },
+        // 上記のようにすることでこのアクション自体も非同期で呼び出せるようになる
+      },
     })
 
     // コンポーネント
     const Counter = {
       template: `
         <div>
-          {{ count }}
+          <p>{{ count }}</p>
           <button @click="increment">カウントアップ</button>
           <button @click="incrementBy({amount: 10})">カウント10</button>
+          <button @click="incrementAsync">非同期カウントアップ</button>
         </div>
       `,
 
@@ -93,11 +133,16 @@
         //},
 
       methods:
-        // mapState と同様に mapMutations ヘルパーで this.$store.commit(...) を短縮的にマッピングできる
         {
+          // mapState と同様に mapMutations ヘルパーで this.$store.commit(...) を短縮的にマッピングできる
           ...Vuex.mapMutations([
             'increment',
             'incrementBy',
+          ]),
+
+          // mapState と同様に mapActions ヘルパーで this.$sore.dispatch(...) を短縮的にマッピングできる
+          ...Vuex.mapActions([
+            'incrementAsync',
           ]),
         }
 
