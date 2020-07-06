@@ -144,6 +144,7 @@
 import Panel from '../components/Panel'
 import Digits from '../components/Digits'
 import eventBus from '../eventbus'
+import { LEVELS } from '../config'
 
 export default {
   name: 'Game',
@@ -165,32 +166,15 @@ export default {
 
       // ニコちゃんマークの表情名 (FontAwesome のアイコン名に対応)
       emotion: 'smile',
-
-      // 難易度マスター
-      levels: {
-        "簡単": {
-          difficulity: 0,
-          sizeWidth: 9,
-          sizeHeight: 9,
-          mineCount: 10,
-        },
-        "普通": {
-          difficulity: 1,
-          sizeWidth: 16,
-          sizeHeight: 16,
-          mineCount: 40,
-        },
-        "難しい": {
-          difficulity: 2,
-          sizeWidth: 30,
-          sizeHeight: 16,
-          mineCount: 99,
-        },
-      },
     }
   },
 
   computed: {
+    // レベルごとの固有設定
+    levels () {
+      return LEVELS
+    },
+
     // 選択された難易度の詳細情報
     selectedLevelDetail () {
       return !this.selectedLevelName ? null : this.levels[this.selectedLevelName]
