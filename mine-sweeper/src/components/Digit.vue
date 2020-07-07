@@ -149,7 +149,9 @@ $backColor: #511;
 export default {
   name: 'Digit',
   props: {
-    // 7セグメントデジタル数字で表現する一桁の整数値
+    /**
+     * 7セグメントデジタル数字で表現する一桁の整数値
+     */
     number: {
       type: Number,
       default: 0,
