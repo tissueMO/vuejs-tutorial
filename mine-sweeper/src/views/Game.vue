@@ -8,7 +8,10 @@
 
     <div class="form-group level">
       <label for="level">難易度: </label>
-      <select id="level" v-model="selectedLevelName">
+      <select
+        id="level"
+        v-model="selectedLevelName"
+        @change="init">
         <option
           v-for="(level, name) in levels"
           :key="level.difficulity">{{ name }}</option>
@@ -43,8 +46,7 @@
           :sizeHeight="selectedLevelDetail.sizeHeight"
           :mineCount="selectedLevelDetail.mineCount"
           @start="start"
-          @end="end"
-          @reset="reset" />
+          @end="end" />
       </div>
     </div>
   </div>
@@ -143,7 +145,6 @@
 <script>
 import Panel from '../components/Panel'
 import Digits from '../components/Digits'
-import eventBus from '../eventbus'
 import { LEVELS } from '../config'
 
 export default {
@@ -155,27 +156,39 @@ export default {
 
   data: function () {
     return {
-      // 選択された難易度のキー
+      /**
+       * 選択された難易度のキー
+       */
       selectedLevelName: '',
 
-      // 経過秒数
+      /**
+       * 経過秒数
+       */
       timeSecondsCount: 0,
 
-      // 経過秒数タイマー
+      /**
+       * 経過秒数タイマー
+       */
       timer: null,
 
-      // ニコちゃんマークの表情名 (FontAwesome のアイコン名に対応)
+      /**
+       * ニコちゃんマークの表情名 (FontAwesome のアイコン名に対応)
+       */
       emotion: 'smile',
     }
   },
 
   computed: {
-    // レベルごとの固有設定
+    /**
+     * レベルごとの固有設定
+     */
     levels () {
       return LEVELS
     },
 
-    // 選択された難易度の詳細情報
+    /**
+     * 選択された難易度の詳細情報
+     */
     selectedLevelDetail () {
       return !this.selectedLevelName ? null : this.levels[this.selectedLevelName]
     },
@@ -184,35 +197,45 @@ export default {
   created () {
     // デフォルトの難易度を選択
     this.selectedLevelName = Object.keys(this.levels)[0]
+    this.init()
   },
 
   methods: {
+    /**
+     * ゲームを初期化します。
+     */
     init () {
-      // イベントバスを通してゲーム親側から子コンポーネントに向けて初期化を促す
-      eventBus.$emit('init')
+      this.$store.dispatch('initialize')
+
+      // ニコちゃんマークの表情をニュートラルに戻す
+      this.emotion = 'smile'
+
+      // タイマーを初期化
+      clearInterval(this.timer)
+      this.timer = null
+      this.timeSecondsCount = 0
     },
 
+    /**
+     * ゲームを開始します。
+     */
     start () {
-      // タイマー計測を開始
       this.timeSecondsCount = 0
+
+      // タイマー計測を開始
       const that = this
       this.timer = setInterval(() => that.timeSecondsCount++, 1000)
     },
 
+    /**
+     * ゲームを終了します。
+     * @param {Boolean} cleared ゲームクリアしたかどうか
+     */
     end (cleared) {
       // ゲームの結果に応じてニコちゃんマークの表情を切り替える
       this.emotion = cleared ? 'laugh-beam' : 'dizzy'
 
       // タイマー計測を停止
-      clearInterval(this.timer)
-    },
-
-    reset () {
-      // ニコちゃんマークの表情をニュートラルに戻す
-      this.emotion = 'smile'
-
-      // タイマー計測を停止
-      this.timeSecondsCount = 0
       clearInterval(this.timer)
     },
   },
