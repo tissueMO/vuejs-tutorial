@@ -3,6 +3,12 @@
 //################################################################################
 
 export const LEVELS = {
+  // "テスト用": {
+  //   difficulity: -1,
+  //   sizeWidth: 9,
+  //   sizeHeight: 9,
+  //   mineCount: 2,
+  // },
   "簡単": {
     difficulity: 0,
     sizeWidth: 9,
