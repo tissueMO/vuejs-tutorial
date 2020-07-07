@@ -159,71 +159,99 @@ export default {
 
   data: function () {
     return {
-      // 開けた後に見えるようになる数字を表すクラス名
+      /**
+       * 開けた後に見えるようになる数字を表すクラス名
+       */
       numberClass: '',
 
-      // 開けたかどうかを表すクラス名
+      /**
+       * 開けたかどうかを表すクラス名
+       */
       openedClass: '',
 
-      // 地雷が見えているかどうかを表すクラス名
+      /**
+       * 地雷が見えているかどうかを表すクラス名
+       */
       mineClass: '',
 
-      // フラグが立てられているかどうかを表すクラス名
+      /**
+       * フラグが立てられているかどうかを表すクラス名
+       */
       flaggedClass: '',
 
-      // 地雷がないところに立てられたスカフラグであるかどうかを表すクラス名
+      /**
+       * 地雷がないところに立てられたスカフラグであるかどうかを表すクラス名
+       */
       badFlaggedClass: '',
 
-      // スマホ向け: 長押しタイマー
+      /**
+       * スマホ向け: 長押しタイマー
+       */
       timer: null,
     }
   },
 
   props: {
-    // パネル上の行番号
+    /**
+     * パネル上の行番号
+     */
     row: {
       type: Number,
       required: true,
     },
 
-    // パネル上の列番号
+    /**
+     * パネル上の列番号
+     */
     col: {
       type: Number,
       required: true,
     },
 
-    // 周囲8タイルにいくつの地雷が仕掛けられているかを表す数字
+    /**
+     * 周囲8タイルにいくつの地雷が仕掛けられているかを表す数字
+     */
     number: {
       type: Number,
       required: true,
       default: 0,
     },
 
-    // 開けたかどうか
+    /**
+     * 開けたかどうか
+     */
     opened: {
       type: Boolean,
       default: false,
     },
 
-    // 地雷が埋め込まれているかどうか
+    /**
+     * 地雷が埋め込まれているかどうか
+     */
     hasMine: {
       type: Boolean,
       default: false,
     },
 
-    // フラグが立てられているかどうか
+    /**
+     * フラグが立てられているかどうか
+     */
     flagged: {
       type: Boolean,
       default: false,
     },
 
-    // 地雷がないところに立てられたスカフラグであることを知らせるかどうか
+    /**
+     * 地雷がないところに立てられたスカフラグであることを知らせるかどうか
+     */
     badFlagged: {
       type: Boolean,
       default: false,
     },
 
-    // プレイヤーから操作できない状態にするかどうか
+    /**
+     * プレイヤーから操作できない状態にするかどうか
+     */
     frozen: {
       type: Boolean,
       default: false,
@@ -248,14 +276,18 @@ export default {
   },
 
   computed: {
-    // このタイルを一意に表すIDを生成する
+    /**
+     * このタイルを一意に表すID
+     */
     id: {
       get () {
         return `tile-${this.row}-${this.col}`
       },
     },
 
-    // 開く操作を行える状態であるかどうかを返す
+    /**
+     * このタイルを開けるかどうか
+     */
     canOpen: {
       get () {
         return !this.opened && !this.flagged && !this.frozen
@@ -264,11 +296,12 @@ export default {
   },
 
   methods: {
-    // スマホ向け: 長押しタップでフラグを立てる
-    touchstart (e) {
-      // イベント引数を分解
-      const [row, col] = e
-
+    /**
+     * スマホ向け: 長押しタップでフラグを立てます。
+     * @params {Number} row 行インデックス
+     * @params {Number} col 列インデックス
+     */
+    touchstart ([row, col]) {
       // 一定時間経過後に離されていなければフラグを立てる
       const that = this
       this.timer = setTimeout(() => {
@@ -277,7 +310,9 @@ export default {
       }, 1000)
     },
 
-    // スマホ向け: 長押しタップキャンセル
+    /**
+     * スマホ向け: 長押しタップの操作をキャンセルします。
+     */
     touchend () {
       if (this.timer) {
         clearTimeout(this.timer)
