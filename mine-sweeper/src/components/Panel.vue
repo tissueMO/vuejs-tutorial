@@ -386,9 +386,7 @@ export default {
 
       // 指定されたタイルを開く
       this.tiles[row][col].opened = true
-      if (!this.tiles[row][col].hasMine) {
-        this.tiles[row][col].flagged = false
-      }
+      this.tiles[row][col].flagged = false
       if (this.tiles[row][col].number !== 0) {
         return
       }
@@ -425,7 +423,7 @@ export default {
         that.timers.push(
           setTimeout(() => {
             that.setBadFlagIfNeeded(tile.row, tile.col)
-            that.openRecursive(tile.row, tile.col)
+            that.tiles[tile.row][tile.col].opened = true
           }, 50 * (i + 1))
         )
       })
