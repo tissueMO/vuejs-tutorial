@@ -3,6 +3,7 @@
 //################################################################################
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
@@ -22,6 +23,11 @@ export default new Vuex.Store({
      * 地雷タイルを開けてゲームオーバーになったかどうか
      */
     isGameOver: false,
+
+    /**
+     * 選択された難易度のキー
+     */
+    selectedLevelName: '',
   },
 
   getters: {
@@ -35,6 +41,7 @@ export default new Vuex.Store({
     started: (state, { value }) => state.isStarted = value,
     cleared: (state, { value }) => state.isCleared = value,
     gameOver: (state, { value }) => state.isGameOver = value,
+    selectedLevelName: (state, { value }) => state.selectedLevelName = value,
   },
 
   actions: {
@@ -56,4 +63,19 @@ export default new Vuex.Store({
       commit('gameOver', { value: true })
     },
   },
+
+  plugins: [
+    // ストアの永続化を行うプラグイン
+    createPersistedState({
+      key: 'mine-sweeper',
+
+      // リロード時のみ復元し、新しいタブやウィンドウに対しては復元対象外とする
+      storage: window.sessionStorage,
+
+      // 永続化対象とする state
+      paths: [
+        'selectedLevelName',
+      ]
+    })
+  ]
 })

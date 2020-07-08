@@ -157,11 +157,6 @@ export default {
   data: function () {
     return {
       /**
-       * 選択された難易度のキー
-       */
-      selectedLevelName: '',
-
-      /**
        * 経過秒数
        */
       timeSecondsCount: 0,
@@ -187,6 +182,18 @@ export default {
     },
 
     /**
+     * 選択された難易度の名前
+     */
+    selectedLevelName: {
+      get () {
+        return this.$store.state.selectedLevelName
+      },
+      set (value) {
+        this.$store.commit('selectedLevelName', { value })
+      },
+    },
+
+    /**
      * 選択された難易度の詳細情報
      */
     selectedLevelDetail () {
@@ -195,8 +202,10 @@ export default {
   },
 
   created () {
-    // デフォルトの難易度を選択
-    this.selectedLevelName = Object.keys(this.levels)[0]
+    if (!Object.keys(this.levels).includes(this.selectedLevelName)) {
+      // デフォルトの難易度を選択
+      this.selectedLevelName = Object.keys(this.levels)[0]
+    }
     this.init()
   },
 
